@@ -1,4 +1,4 @@
-package xyz.xfqlittlefan.boomyouupx
+package xyz.xfqlittlefan.boomyouup
 
 import io.flutter.embedding.android.FlutterActivity
 
