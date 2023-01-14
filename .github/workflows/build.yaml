@@ -9,9 +9,10 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - platform: Android Apk
+          - platform: Android
             os: ubuntu-latest
             command: flutter build apk --split-per-abi
             output: build/app/outputs/flutter-apk/*
@@ -61,6 +62,13 @@ jobs:
       - if: matrix.platform == 'Android'
         name: Install Android dependencies
         run: cargo install cargo-ndk
+
+      - if: matrix.platform == 'Android'
+        name: Configure Android Signing
+        run: |
+          cd android
+          echo ${{ secrets.KEY }} | base64 --decode > key.jks
+          echo ${{ secrets.PROPERTIES }} | base64 --decode > key.properties
 
       - name: Generate code
         run: flutter_rust_bridge_codegen --rust-input native/src/api.rs --dart-output ./lib/bridge_generated.dart --dart-decl-output ./lib/bridge_definitions.dart
