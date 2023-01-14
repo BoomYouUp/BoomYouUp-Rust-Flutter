@@ -37,6 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get install ninja-build
           flutter pub get
           cargo install flutter_rust_bridge_codegen
 
@@ -53,7 +54,7 @@ jobs:
 
       - if: matrix.platform == 'Android'
         name: Setup Android NDK
-        run: sdkmanager --install "ndk;latest"
+        run: sdkmanager --install "ndk"
 
       - if: matrix.platform == 'Android'
         name: Add Rust targets for Android
