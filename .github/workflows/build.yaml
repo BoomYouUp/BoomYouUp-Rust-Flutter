@@ -8,8 +8,68 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - platform: Android Apk
+            os: ubuntu-latest
+            command: flutter build apk --split-per-abi
+            output: build/app/outputs/flutter-apk/*
+          - platform: Linux
+            os: ubuntu-latest
+            command: flutter build linux
+            output: build/linux/release/bundle/*
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      -
+      - uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install dependencies
+        run: |
+          flutter pub get
+          cargo install flutter_rust_bridge_codegen
+
+      - if: matrix.platform == 'Android'
+        name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - if: matrix.platform == 'Android'
+        name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - if: matrix.platform == 'Android'
+        name: Setup Android NDK
+        run: sdkmanager --install "ndk;latest"
+
+      - if: matrix.platform == 'Android'
+        name: Add Rust targets for Android
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+
+      - if: matrix.platform == 'Android'
+        name: Install Android dependencies
+        run: cargo install cargo-ndk
+
+      - name: Generate code
+        run: flutter_rust_bridge_codegen --rust-input native/src/api.rs --dart-output ./lib/bridge_generated.dart --dart-decl-output ./lib/bridge_definitions.dart
+
+      - name: Build
+        run: ${{ matrix.command }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}
+          path: ${{ matrix.output }}
