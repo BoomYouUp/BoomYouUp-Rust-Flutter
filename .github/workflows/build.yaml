@@ -70,7 +70,7 @@ jobs:
         name: Install Android dependencies
         run: cargo install cargo-ndk
 
-      - if: martix.platform == 'Linux'
+      - if: matrix.platform == 'Linux'
         name: Install Linux dependencies
         run: sudo apt-get -y ninja-build libgtk-3-dev
 
