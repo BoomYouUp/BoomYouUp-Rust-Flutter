@@ -45,8 +45,8 @@ jobs:
         name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: 17
+          distribution: adopt
 
       - if: matrix.platform == 'Android'
         name: Setup Android SDK
@@ -54,7 +54,7 @@ jobs:
 
       - if: matrix.platform == 'Android'
         name: Setup Android NDK
-        run: sdkmanager --install "ndk"
+        run: sdkmanager --install "ndk;25.1.8937393"
 
       - if: matrix.platform == 'Android'
         name: Add Rust targets for Android
