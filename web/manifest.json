@@ -1,11 +1,11 @@
 {
-    "name": "boom_you_up",
+    "name": "BoomYouUp",
     "short_name": "boom_you_up",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Boom you up.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
