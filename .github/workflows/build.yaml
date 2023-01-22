@@ -82,6 +82,9 @@ jobs:
 #        env:
 #          ANDROID_NDK_HOME:
 
+      - name: Tree
+        run: tree
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
