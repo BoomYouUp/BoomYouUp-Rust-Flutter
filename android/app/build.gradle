@@ -95,7 +95,9 @@ dependencies {
     }
     tasks.register("cargoBuild$taskPostfix", Exec) {
         workingDir "../../native"
-        environment ANDROID_NDK_HOME: "${localProperties.getProperty('ndk.dir')}"
+        if (System.env.ANDROID_NDK_ROOT == null) {
+            environment ANDROID_NDK_ROOT: "${localProperties.getProperty('ndk.dir')}"
+        }
         commandLine 'cargo', 'ndk',
                 // the 2 ABIs below are used by real Android devices
                 '-t', 'armeabi-v7a',
