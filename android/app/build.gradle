@@ -31,7 +31,8 @@ signingProperties.load(new FileInputStream(rootProject.file('key.properties')))
 android {
     namespace 'xyz.xfqlittlefan.boomyouup'
     compileSdk 33 //flutter.compileSdkVersion
-    // ndkVersion flutter.ndkVersion
+    buildToolsVersion '33.0.1'
+    ndkVersion '25.1.8937393' //flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11

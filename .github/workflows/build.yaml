@@ -51,9 +51,9 @@ jobs:
         name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - if: matrix.platform == 'Android'
-        name: Setup Android NDK
-        run: sdkmanager --install "ndk;25.1.8937393"
+#      - if: matrix.platform == 'Android'
+#        name: Setup Android NDK
+#        run: sdkmanager --install "ndk;25.1.8937393"
 
       - if: matrix.platform == 'Android'
         name: Add Rust targets for Android
@@ -79,6 +79,8 @@ jobs:
 
       - name: Build
         run: ${{ matrix.command }}
+#        env:
+#          ANDROID_NDK_HOME:
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
