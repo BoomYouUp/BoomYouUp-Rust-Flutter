@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="DayNightBase" parent="@android:style/Theme.Light.NoTitleBar" />
 
@@ -19,6 +19,9 @@
 
     <style name="BaseTheme" parent="DayNightBase">
         <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
     <style name="NormalTheme" parent="BaseTheme" />
