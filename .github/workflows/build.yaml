@@ -23,21 +23,10 @@ jobs:
           - platform: Windows
             os: windows-latest
             command: flutter build windows
-            output: build/windows/x64/release/bundle/*
+            output: build/windows/runner/Release/*
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-
-      - name: Flutter cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pub-cache
-            ~/.dart_tool
-            ~/.flutter
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-
 
       - name: Rust cache
         uses: Swatinem/rust-cache@v2
@@ -60,6 +49,7 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           channel: stable
+          cache: true
 
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
