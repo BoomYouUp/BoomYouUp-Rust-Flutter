@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
 import 'ffi.dart' if (dart.library.html) 'ffi_web.dart';
@@ -12,10 +13,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(useMaterial3: true),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return DynamicColorBuilder(
+      builder: (light, dark) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(colorScheme: light, useMaterial3: true),
+          darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
+          themeMode: ThemeMode.system,
+          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        );
+      },
     );
   }
 }
