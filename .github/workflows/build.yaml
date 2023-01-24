@@ -20,9 +20,39 @@ jobs:
             os: ubuntu-latest
             command: flutter build linux
             output: build/linux/x64/release/bundle/*
+          - platform: Windows
+            os: windows-latest
+            command: flutter build windows
+            output: build/windows/x64/release/bundle/*
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+
+      - name: Flutter cache
+        uses: actions/cache@v2
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.dart_tool
+            ~/.flutter
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - if: matrix.platform == 'Android'
+        name: Android cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.android/build-cache
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
@@ -51,10 +81,6 @@ jobs:
         name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-#      - if: matrix.platform == 'Android'
-#        name: Setup Android NDK
-#        run: sdkmanager --install "ndk;25.1.8937393"
-
       - if: matrix.platform == 'Android'
         name: Add Rust targets for Android
         run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
@@ -79,10 +105,9 @@ jobs:
 
       - name: Build
         run: ${{ matrix.command }}
-#        env:
-#          ANDROID_NDK_HOME:
 
       - name: Tree
+        shell: bash
         run: tree
 
       - name: Upload artifacts

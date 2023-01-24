@@ -1,5 +1,4 @@
 version: 2
-enable-beta-ecosystems: true
 updates:
   - package-ecosystem: pub
     directory: "/"
@@ -7,5 +6,9 @@ updates:
       interval: daily
   - package-ecosystem: cargo
     directory: "/native"
+    schedule:
+      interval: daily
+  - package-ecosystem: gradle
+    directory: "/android"
     schedule:
       interval: daily
