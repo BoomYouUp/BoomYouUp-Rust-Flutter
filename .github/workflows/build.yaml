@@ -31,7 +31,7 @@ jobs:
       - name: Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          workspace: native
+          workspaces: native
 
       - if: matrix.platform == 'Android'
         name: Android cache
