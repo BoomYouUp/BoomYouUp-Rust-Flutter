@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 def signingProperties = new Properties()
-def signingPropertiesFile = rootProject.file('local.properties')
+def signingPropertiesFile = rootProject.file('key.properties')
 if (signingPropertiesFile.exists()) {
     signingPropertiesFile.withReader('UTF-8') { reader ->
         signingProperties.load(reader)
@@ -36,8 +36,8 @@ if (signingPropertiesFile.exists()) {
 android {
     namespace 'xyz.xfqlittlefan.boomyouup'
     compileSdk 33 //flutter.compileSdkVersion
-    buildToolsVersion '33.0.1'
     ndkVersion '25.1.8937393' //flutter.ndkVersion
+    buildToolsVersion = '33.0.1'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
