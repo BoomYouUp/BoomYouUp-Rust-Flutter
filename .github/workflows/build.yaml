@@ -30,9 +30,6 @@ jobs:
 
       - name: Flutter cache
         uses: actions/cache@v2
-
-      - name: Rust cache
-        uses: Swatinem/rust-cache@v2
         with:
           path: |
             ~/.pub-cache
@@ -41,6 +38,9 @@ jobs:
           key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-flutter-
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
 
       - if: matrix.platform == 'Android'
         name: Android cache
