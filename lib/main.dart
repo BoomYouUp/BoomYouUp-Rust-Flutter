@@ -24,11 +24,11 @@ class MyApp extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (light, dark) {
         return MaterialApp(
-          title: 'Flutter Demo',
+          title: 'BoomYouUp',
           theme: ThemeData(colorScheme: light, useMaterial3: true),
           darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
           themeMode: ThemeMode.system,
-          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          home: const MyHomePage(title: 'BoomYouUp'),
         );
       },
     );
