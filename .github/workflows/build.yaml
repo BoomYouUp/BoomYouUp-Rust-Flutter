@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - platform: Android
@@ -23,7 +24,7 @@ jobs:
             os: windows-latest
             command: flutter build windows
             output: build/windows/runner/Release/*
-    fail-fast: false
+
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
