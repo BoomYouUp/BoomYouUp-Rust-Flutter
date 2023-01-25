@@ -55,9 +55,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<Platform> platform;
-  late Future<bool> isRelease;
-
   @override
   void initState() {
     super.initState();
