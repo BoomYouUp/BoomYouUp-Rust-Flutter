@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 import 'ffi.dart' if (dart.library.html) 'ffi_web.dart';
 
@@ -12,31 +13,41 @@ void main() {
     ),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(const MyApp());
+
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final router = GoRouter(initialLocation: '/', routes: [
+      GoRoute(
+        path: '/',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: HomePage(title: 'BoomYouUp')),
+      )
+    ]);
+
     return DynamicColorBuilder(
       builder: (light, dark) {
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'BoomYouUp',
           theme: ThemeData(colorScheme: light, useMaterial3: true),
           darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
           themeMode: ThemeMode.system,
-          home: const MyHomePage(title: 'BoomYouUp'),
+          routerDelegate: router.routerDelegate,
+          routeInformationParser: router.routeInformationParser,
         );
       },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -50,10 +61,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   // These futures belong to the state and are only initialized once,
   // in the initState method.
   late Future<Platform> platform;
