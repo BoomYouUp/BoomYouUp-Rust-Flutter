@@ -6,8 +6,19 @@ on:
     branches:
       - main
 
+
+permissions:
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     strategy:
       fail-fast: false
       matrix:
@@ -15,28 +26,33 @@ jobs:
           - platform: Android
             os: ubuntu-latest
             command: flutter build apk --split-per-abi
-            output: build/app/outputs/flutter-apk/*
+            output: build/app/outputs/flutter-apk/
           - platform: Linux
             os: ubuntu-latest
             command: flutter build linux
-            output: build/linux/x64/release/bundle/*
+            output: build/linux/x64/release/bundle/
           - platform: Windows
             os: windows-latest
             command: flutter build windows
-            output: build/windows/runner/Release/*
+            output: build/windows/runner/Release/
+          - platform: Web
+            os: ubuntu-latest
+            command: flutter build web
+            output: build/web/
 
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Rust cache
+      - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: native
           shared-key: ${{ matrix.platform }}
 
       - if: matrix.platform == 'Android'
-        name: Android cache
+        name: Setup Android cache
         uses: actions/cache@v3
         with:
           path: |
@@ -47,7 +63,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Setup Flutter
+      - name: Setup Flutter with cache
         uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -59,7 +75,7 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Install dependencies
+      - name: Install common dependencies
         run: |
           flutter pub get
           cargo install flutter_rust_bridge_codegen
@@ -76,10 +92,6 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - if: matrix.platform == 'Android'
-        name: Add Rust targets for Android
-        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
-
-      - if: matrix.platform == 'Android'
         name: Configure Android Signing
         run: |
           cd android
@@ -88,20 +100,41 @@ jobs:
 
       - if: matrix.platform == 'Android'
         name: Install Android dependencies
-        run: cargo install cargo-ndk
+        run: |
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
+          cargo install cargo-ndk
 
       - if: matrix.platform == 'Linux'
         name: Install Linux dependencies
         run: sudo apt-get install -y ninja-build libgtk-3-dev
 
+      - if: matrix.platform == 'Web'
+        name: Install Web dependencies
+        run: |
+          rustup toolchain install nightly
+          rustup +nightly component add rust-src
+          rustup +nightly target add wasm32-unknown-unknown
+          cargo install wasm-pack
+
       - name: Generate code
-        run: flutter_rust_bridge_codegen --rust-input native/src/api.rs --dart-output ./lib/bridge_generated.dart --dart-decl-output ./lib/bridge_definitions.dart
+        run: flutter_rust_bridge_codegen --rust-input native/src/api.rs --dart-output ./lib/bridge_generated.dart --dart-decl-output ./lib/bridge_definitions.dart --wasm
 
       - name: Build
         run: ${{ matrix.command }}
 
-      - name: Upload artifacts
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform }}
           path: ${{ matrix.output }}
+
+      - if: matrix.platform == 'Web'
+        name: Upload Web artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ${{ matrix.output }}
+
+      - if: matrix.platform == 'Web'
+        name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
