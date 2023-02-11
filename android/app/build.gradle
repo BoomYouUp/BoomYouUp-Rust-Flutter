@@ -62,18 +62,20 @@ android {
         versionName flutterVersionName
     }
 
-    signingConfigs {
-        config {
-            storeFile rootProject.file('key.jks')
-            storePassword signingProperties.getProperty('b')
-            keyAlias signingProperties.getProperty('a')
-            keyPassword signingProperties.getProperty('b')
+    if (signingProperties['a'] != null && signingProperties['b'] != null) {
+        signingConfigs {
+            config {
+                storeFile rootProject.file('key.jks')
+                storePassword signingProperties['b']
+                keyAlias signingProperties['a']
+                keyPassword signingProperties['b']
+            }
         }
-    }
 
-    buildTypes {
-        release {
-            signingConfig signingConfigs.config
+        buildTypes {
+            release {
+                signingConfig signingConfigs.config
+            }
         }
     }
 }
@@ -87,7 +89,7 @@ dependencies {
 }
 
 [
-        Debug: null,
+        Debug  : null,
         Profile: '--release',
         Release: '--release'
 ].each {
