@@ -1,6 +1,6 @@
 {
     "name": "BoomYouUp",
-    "short_name": "boom_you_up",
+    "short_name": "BoomYouUp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
