@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   ffi: ^2.0.1
-  flutter_rust_bridge: ^1.72.2
+  flutter_rust_bridge: ^1.75.2
   meta: ^1.8.0
   dynamic_color: ^1.6.3
   go_router: ^7.0.0
