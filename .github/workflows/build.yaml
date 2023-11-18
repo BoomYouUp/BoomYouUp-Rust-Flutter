@@ -76,7 +76,7 @@ jobs:
       - name: Install common dependencies
         run: |
           flutter pub get
-          cargo install flutter_rust_bridge_codegen
+          cargo install flutter_rust_bridge_codegen cargo-expand
 
       - if: matrix.platform == 'Android'
         name: Setup JDK
